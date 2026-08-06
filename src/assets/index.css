@@ -54,8 +54,8 @@
     --card-foreground: oklch(0.145 0 0);
     --popover: oklch(1 0 0);
     --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.457 0.24 277.023);
-    --primary-foreground: oklch(0.962 0.018 272.314);
+    --primary: oklch(0.52 0.216 265);
+    --primary-foreground: oklch(0.985 0.005 265);
     --secondary: oklch(0.967 0.001 286.375);
     --secondary-foreground: oklch(0.21 0.006 285.885);
     --muted: oklch(0.97 0 0);
@@ -127,4 +127,99 @@
   button:not(:disabled), [role="button"]:not(:disabled) {
     cursor: pointer;
     }
+}
+
+@layer utilities {
+  /* Konteyner — barcha sahifalar uchun bir xil kenglik */
+  .container-page {
+    @apply mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Dashboard kartalari uchun gradientlar */
+  .card-blue {
+    background: linear-gradient(150deg, #4f7cff 0%, #3b5bdb 100%);
+  }
+  .card-green {
+    background: linear-gradient(150deg, #22c55e 0%, #16a34a 100%);
+  }
+  .card-orange {
+    background: linear-gradient(150deg, #fb923c 0%, #f97316 100%);
+  }
+  .card-purple {
+    background: linear-gradient(150deg, #a78bfa 0%, #8b5cf6 100%);
+  }
+  .card-violet {
+    background: linear-gradient(150deg, #8b8bff 0%, #7c74f0 100%);
+  }
+
+  /* Hero uchun tumanli yo'l foni */
+  .hero-fog {
+    background:
+      radial-gradient(120% 90% at 50% 0%, rgba(120, 170, 210, 0.35) 0%, transparent 55%),
+      linear-gradient(180deg, #1b2b3a 0%, #14212e 45%, #0d1720 100%);
+  }
+}
+
+@layer utilities {
+  /* v-reveal animatsiyasi (scroll bilan paydo bo'lish) */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+  .reveal-left {
+    transform: translateX(-26px);
+  }
+  .reveal-right {
+    transform: translateX(26px);
+  }
+  .reveal-scale {
+    transform: scale(0.94);
+  }
+  /* Ikki class specificity — barcha variantlarni bosadi */
+  .reveal.reveal-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Scrollbarni yashirish (scroll-fade-x bilan birga toza ko'rinish) */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Kartalar uchun yumshoq hover ko'tarilish */
+  .hover-lift {
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-3px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+}
+
+/* Number input strelkalarini yashirish (OTP) */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
