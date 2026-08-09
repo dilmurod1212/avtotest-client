@@ -74,6 +74,7 @@ export default {
     telegram: 'Войти через Telegram',
     or: 'ИЛИ',
     phone: 'Номер телефона',
+    phoneShort: 'Номер неполный — введите 9 цифр',
     remember: 'Запомнить меня',
     forgot: 'Забыли пароль?',
     codeSent: 'Код подтверждения отправлен',

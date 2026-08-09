@@ -74,6 +74,7 @@ export default {
     telegram: 'Telegram orqali kirish',
     or: 'YOKI',
     phone: 'Telefon raqami',
+    phoneShort: "Raqam to'liq emas — 9 ta raqam kiriting",
     remember: 'Meni tizimda saqlang',
     forgot: 'Parolni unutdingizmi?',
     codeSent: 'Tasdiqlash kodi yuborildi',

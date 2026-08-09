@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useScrollLock, useWindowScroll } from '@vueuse/core'
 import { Menu01Icon, Cancel01Icon } from '@hugeicons/core-free-icons'
@@ -27,6 +27,18 @@ const bodyScrollLocked = useScrollLock(document.body)
 watch(open, (v) => {
   bodyScrollLocked.value = v
 })
+
+// Nav bo'limlariga yumshoq scroll (fixed header uchun offset bilan)
+function goTo(hash: string) {
+  open.value = false
+  nextTick(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const behavior: ScrollBehavior = reduce ? 'auto' : 'smooth'
+    const el = hash === '#hero' ? null : document.querySelector<HTMLElement>(hash)
+    const top = el && el.offsetParent !== null ? el.getBoundingClientRect().top + window.scrollY - 72 : 0
+    window.scrollTo({ top, behavior })
+  })
+}
 </script>
 
 <template>
@@ -43,6 +55,7 @@ watch(open, (v) => {
           :key="l.href"
           :href="l.href"
           class="text-sm text-foreground/70 transition-colors hover:text-foreground"
+          @click.prevent="goTo(l.href)"
         >
           {{ l.label }}
         </a>
@@ -79,7 +92,7 @@ watch(open, (v) => {
             :key="l.href"
             :href="l.href"
             class="border-b border-border py-4 text-base font-medium text-foreground/80"
-            @click="open = false"
+            @click.prevent="goTo(l.href)"
           >
             {{ l.label }}
           </a>

@@ -120,9 +120,16 @@
   * {
     @apply border-border outline-ring/50;
     }
+  html {
+    /* v-reveal animatsiyalari (translateX) vaqtincha gorizontal overflow
+       hosil qilib, telefonda x-scroll chiqarardi. `clip` scroll container
+       yaratmaydi, shuning uchun sticky/fixed'ni buzmaydi. */
+    overflow-x: clip;
+    }
   body {
     @apply bg-background text-foreground;
     @apply font-sans;
+    overflow-x: clip;
     }
   button:not(:disabled), [role="button"]:not(:disabled) {
     cursor: pointer;

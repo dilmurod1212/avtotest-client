@@ -21,18 +21,29 @@ const router = useRouter()
 const { t } = useI18n()
 
 const phone = ref('')
+const touched = ref(false)
 const remember = ref(false)
 const loading = ref(false)
 
-const isValid = computed(() => phone.value.replace(/\D/g, '').length >= 9)
+const digitCount = computed(() => phone.value.replace(/\D/g, '').length)
+const isValid = computed(() => digitCount.value === 9)
+const showError = computed(() => touched.value && digitCount.value < 9)
 
+/**
+ * Mask: faqat raqam qabul qiladi, 9 tadan ko'p yozdirmaydi va
+ * "XX XXX XX XX" formatiga keltiradi.
+ */
 function formatPhone(e: Event) {
-  const digits = (e.target as HTMLInputElement).value.replace(/\D/g, '').slice(0, 9)
+  const el = e.target as HTMLInputElement
+  const digits = el.value.replace(/\D/g, '').slice(0, 9)
   const parts = [digits.slice(0, 2), digits.slice(2, 5), digits.slice(5, 7), digits.slice(7, 9)]
   phone.value = parts.filter(Boolean).join(' ')
+  // Controlled input: DOM qiymatini formatlangan qiymatga sinxronlaymiz
+  el.value = phone.value
 }
 
 async function onSubmit() {
+  touched.value = true
   if (!isValid.value || loading.value) return
   loading.value = true
   const fullPhone = '+998 ' + phone.value
@@ -91,11 +102,15 @@ async function onSubmit() {
             id="phone"
             :model-value="phone"
             inputmode="numeric"
+            autocomplete="tel"
             placeholder="(00) 000-00-00"
             class="h-11 flex-1 rounded-xl text-sm"
+            :aria-invalid="showError || undefined"
             @input="formatPhone"
+            @blur="touched = true"
           />
         </div>
+        <p v-if="showError" class="text-xs text-destructive">{{ t('auth.phoneShort') }}</p>
       </div>
 
       <div class="flex items-center justify-between">
