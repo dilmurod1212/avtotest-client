@@ -93,6 +93,26 @@ const routes: Route[] = [
     match: /\/auth\/me$/,
     handler: () => currentUser,
   },
+  // Auth: Telegram Login Widget
+  // MUHIM: real backendda bu yerda `hash` bot token bilan HMAC-SHA256
+  // orqali tekshirilishi shart (TELEGRAM_AUTH.md ga qarang). Mock faqat
+  // ma'lumotni qabul qilib, foydalanuvchini qaytaradi.
+  {
+    method: 'post',
+    match: /\/auth\/telegram$/,
+    handler: (config) => {
+      const body = JSON.parse(config.data ?? '{}')
+      const name = [body.first_name, body.last_name].filter(Boolean).join(' ')
+      return {
+        token: 'mock-jwt-tg.' + Math.random().toString(36).slice(2),
+        user: {
+          ...currentUser,
+          name: name || currentUser.name,
+          avatar: body.photo_url || currentUser.avatar,
+        },
+      }
+    },
+  },
   // Dashboard
   {
     method: 'get',

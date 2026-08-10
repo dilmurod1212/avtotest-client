@@ -5,7 +5,6 @@ import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
 import {
   UserCircleIcon,
-  TelegramIcon,
   ArrowRight01Icon,
   Loading03Icon,
 } from '@hugeicons/core-free-icons'
@@ -15,10 +14,25 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import AuthLayout from '@/components/layout/AuthLayout.vue'
-import { requestCode } from '@/services/auth.service'
+import TelegramLoginButton from '@/components/common/TelegramLoginButton.vue'
+import { requestCode, telegramAuth, type TelegramAuthData } from '@/services/auth.service'
+import { useAuth } from '@/composables/useAuth'
 
 const router = useRouter()
 const { t } = useI18n()
+const { setSession } = useAuth()
+
+/** Telegram Login Widget javobini backendga yuboramiz va sessiyani ochamiz */
+async function onTelegramAuth(data: TelegramAuthData) {
+  try {
+    const res = await telegramAuth(data)
+    setSession(res.token, res.user)
+    toast.success(t('auth.loginSuccess'))
+    router.push({ name: 'dashboard' })
+  } catch (e: any) {
+    toast.error(e?.message ?? 'Error')
+  }
+}
 
 const phone = ref('')
 const touched = ref(false)
@@ -73,15 +87,12 @@ async function onSubmit() {
       <p class="mt-1 text-sm text-muted-foreground">{{ t('auth.loginSubtitle') }}</p>
     </div>
 
-    <!-- Telegram -->
-    <Button
-      variant="outline"
-      class="mt-6 h-11 w-full rounded-xl text-sm"
-      @click="toast.info(t('auth.telegramDemo'))"
-    >
-      <HugeiconsIcon :icon="TelegramIcon" class="size-5 text-[#229ED9]" />
-      {{ t('auth.telegram') }}
-    </Button>
+    <!-- Telegram Login Widget -->
+    <div class="mt-6">
+      <TelegramLoginButton @auth="onTelegramAuth">
+        {{ t('auth.telegram') }}
+      </TelegramLoginButton>
+    </div>
 
     <div class="my-5 flex items-center gap-3">
       <span class="h-px flex-1 bg-border" />
